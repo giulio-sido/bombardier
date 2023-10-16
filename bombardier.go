@@ -419,6 +419,37 @@ func (b *bombardier) gatherInfo() internal.TestInfo {
 			})
 	}
 
+	str := knownFormat("csv")
+
+	if b.conf.format == str {
+		arr_tmp := []float64{}
+		// If the file doesn't exist, create it, or append to the file
+		f, err := os.OpenFile("output/"+b.conf.outFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			panic(err)
+		}
+		csv_str := fmt.Sprintf("%d,%d,%.2f,%.2f\n",
+			b.conf.numConns,
+			*b.conf.numReqs,
+			info.Result.LatenciesStats(arr_tmp).Mean/1000,
+			info.Result.RequestsStats(arr_tmp).Mean)
+		if _, err := f.Write([]byte(csv_str)); err != nil {
+			f.Close() // ignore error; Write error takes precedence
+			panic(err)
+		}
+		if err := f.Close(); err != nil {
+			panic(err)
+		}
+		// fmt.Printf("#########\nnum_conns:\n%d\nnum_reqs:\n%d\nlat_mn:\n%.2f\nrate_mn:\n%.2f\n########\n",
+		fmt.Printf("%d,%d,%.2f,%.2f\n",
+			b.conf.numConns,
+			*b.conf.numReqs,
+			info.Result.LatenciesStats(arr_tmp).Mean/1000,
+			info.Result.RequestsStats(arr_tmp).Mean)
+	}
+
+	fmt.Printf("out file: %s\n", b.conf.outFile)
+
 	return info
 }
 

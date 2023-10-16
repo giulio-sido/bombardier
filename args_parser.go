@@ -41,6 +41,8 @@ type kingpinParser struct {
 	noPrint   bool
 
 	formatSpec string
+
+	outFile string
 }
 
 func newKingpinParser() argsParser {
@@ -64,6 +66,7 @@ func newKingpinParser() argsParser {
 		printSpec:    new(nullableString),
 		noPrint:      false,
 		formatSpec:   "plain-text",
+		outFile:      "output.csv",
 	}
 
 	app := kingpin.New("", "Fast cross-platform HTTP benchmarking tool").
@@ -177,6 +180,11 @@ func newKingpinParser() argsParser {
 		Short('o').
 		StringVar(&kparser.formatSpec)
 
+	app.Flag("out-file", "output file to write the results").
+		PlaceHolder("<spec>").
+		Short('x').
+		StringVar(&kparser.outFile)
+
 	app.Arg("url", "Target's URL").Required().
 		StringVar(&kparser.url)
 
@@ -232,6 +240,7 @@ func (k *kingpinParser) parse(args []string) (config, error) {
 		printProgress:     pp,
 		printResult:       pr,
 		format:            format,
+		outFile:           k.outFile,
 	}, nil
 }
 

@@ -6,6 +6,7 @@ var (
 	templates = map[string][]byte{
 		"plain-text": []byte(plainTextTemplate),
 		"json":       []byte(jsonTemplate),
+		"csv":        []byte(csvTemplate),
 	}
 )
 
@@ -29,6 +30,8 @@ func formatFromString(formatSpec string) format {
 		return knownFormat("plain-text")
 	case "j", "json":
 		return knownFormat("json")
+	case "csv":
+		return knownFormat("csv")
 	}
 	// nil represents unknown format
 	return nil
@@ -65,6 +68,10 @@ const (
 	{{ end -}}
 {{ end }}
 {{ printf "  %-10v %10v/s\n" "Throughput:" (FormatBinary .Result.Throughput)}}`
+	csvTemplate = `
+{{ with .Result.LatenciesStats (FloatsToArray 0.5 0.75 0.9 0.95 0.99) }}
+	{{- printf "%v\n" (FormatTimeUs .Mean) }}
+{{- end -}}`
 	jsonTemplate = `{"spec":{
 {{- with .Spec -}}
 "numberOfConnections":{{ .NumberOfConnections }}
