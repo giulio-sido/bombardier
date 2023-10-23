@@ -1,8 +1,17 @@
 #!/bin/bash
 
-for i in {1..10}
+# number of loops/prints for each load:
+# 0: html
+# 1: 10000/1000
+# 2: 50000/10000
+# 3: 100000/10000
+# 5: 300000/100000
+# 20: 1000000/100000
+
+for i in {1..30}
 do
-    for conn in {1..60} 65 70 75 80 85 90 95 100 110 120 130 140 150;
+    # for conn in {1..60} `seq 62 2 100` `seq 105 5 200`
+    for conn in {1..60} `seq 62 2 80`
     do
         echo "Loop: " $i ", number of connections: " $conn
         req=$(($conn * 100))

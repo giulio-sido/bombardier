@@ -428,7 +428,7 @@ func (b *bombardier) gatherInfo() internal.TestInfo {
 		if err != nil {
 			panic(err)
 		}
-		csv_str := fmt.Sprintf("%d,%d,%.2f,%.2f\n",
+		csv_str := fmt.Sprintf("%d,%d,%.4f,%.2f\n",
 			b.conf.numConns,
 			*b.conf.numReqs,
 			info.Result.LatenciesStats(arr_tmp).Mean/1000,
@@ -441,7 +441,7 @@ func (b *bombardier) gatherInfo() internal.TestInfo {
 			panic(err)
 		}
 		// fmt.Printf("#########\nnum_conns:\n%d\nnum_reqs:\n%d\nlat_mn:\n%.2f\nrate_mn:\n%.2f\n########\n",
-		fmt.Printf("%d,%d,%.2f,%.2f\n",
+		fmt.Printf("%d,%d,%.4f,%.2f\n",
 			b.conf.numConns,
 			*b.conf.numReqs,
 			info.Result.LatenciesStats(arr_tmp).Mean/1000,
